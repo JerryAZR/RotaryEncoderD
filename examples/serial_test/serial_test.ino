@@ -2,7 +2,7 @@
  * @file serial_test.ino
  * @author Zerui An (anzerui@126.com / jerryazr@gmail.com)
  * @brief Basic rotary encoder demo using a serial monitor.
- * @version 1.0.2
+ * @version 1.1.0
  * @date 2022-03-31
  * 
  * @copyright Copyright (c) 2022 Zerui An

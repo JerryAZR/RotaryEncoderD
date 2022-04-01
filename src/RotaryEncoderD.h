@@ -10,7 +10,7 @@
  * 
  * @todo Add support for user-defined interrupts
  * 
- * @version 1.0.2
+ * @version 1.1.0
  * @date 2022-03-31
  * 
  * @copyright Copyright (c) 2022 Zerui An
@@ -34,6 +34,8 @@
 
 #include <Arduino.h>
 
+typedef void (*rotaryISR_t)(); // void function pointer
+
 template<uint8_t clk_pin, uint8_t dt_pin>
 class RotaryEncoderD {
 private:
@@ -46,10 +48,14 @@ private:
     // pin values
     static volatile uint8_t clk_val;
     static volatile uint8_t dt_val;
+    // other useful variables
     static volatile int     state;
 
     static void clk_trigger_isr(); // update dt value
     static void dt_trigger_isr(); // update clk value
+
+    static rotaryISR_t forwardISR;
+    static rotaryISR_t backwardISR;
 public:
     // return values
     static const int NO_ACTION  = 0;
@@ -58,8 +64,10 @@ public:
 
     RotaryEncoderD(bool active_low = true);
     ~RotaryEncoderD();
-    virtual void begin();
-    virtual int read();
+    static void begin();
+    static int read();
+    static void attachForwardInterrupt(rotaryISR_t isr);
+    static void attachBackwardInterrupt(rotaryISR_t isr);
 };
 
 template<uint8_t clk_pin, uint8_t dt_pin>
@@ -73,6 +81,12 @@ volatile uint8_t RotaryEncoderD<clk_pin, dt_pin>::dt_val = 1;
 
 template<uint8_t clk_pin, uint8_t dt_pin>
 volatile int RotaryEncoderD<clk_pin, dt_pin>::state = NO_ACTION;
+
+template<uint8_t clk_pin, uint8_t dt_pin>
+rotaryISR_t RotaryEncoderD<clk_pin, dt_pin>::forwardISR = 0;
+
+template<uint8_t clk_pin, uint8_t dt_pin>
+rotaryISR_t RotaryEncoderD<clk_pin, dt_pin>::backwardISR = 0;
 
 /**
  * @brief Construct a new RotaryEncoderD<clk_pin, dt_pin>::RotaryEncoderD object
@@ -125,6 +139,38 @@ int RotaryEncoderD<clk_pin, dt_pin>::read() {
 }
 
 /**
+ * @brief Set an interrupt service routine (ISR) that is called on rotary
+ * encoder forward step.
+ * 
+ * @tparam clk_pin 
+ * @tparam dt_pin 
+ * @param isr function pointer to the ISR.
+ * Should take no arguments and return nothing. 
+ */
+template<uint8_t clk_pin, uint8_t dt_pin>
+void RotaryEncoderD<clk_pin, dt_pin>::attachForwardInterrupt(rotaryISR_t isr) {
+    forwardISR = isr;
+}
+
+/**
+ * @brief Set an interrupt service routine (ISR) that is called on rotary
+ * encoder backward step.
+ * 
+ * @tparam clk_pin 
+ * @tparam dt_pin 
+ * @param isr function pointer to the ISR.
+ * Should take no arguments and return nothing. 
+ */
+template<uint8_t clk_pin, uint8_t dt_pin>
+void RotaryEncoderD<clk_pin, dt_pin>::attachBackwardInterrupt(rotaryISR_t isr) {
+    backwardISR = isr;
+}
+
+/*----------------------------------------------------------------------------*/
+/*                            Private functions                               */
+/*----------------------------------------------------------------------------*/
+
+/**
  * @brief Interrupt Service Routine (ISR) triggered by clock pin on CHANGE.
  * Updates the di pin reading.
  * 
@@ -155,7 +201,18 @@ void RotaryEncoderD<clk_pin, dt_pin>::dt_trigger_isr() {
     // only read at clock edge
     if (previous_clk == clk_val) return;
 
+    // update state
     state = clk_val ? FORWARD : BACKWARD;
+
+    if (clk_val) {
+        // clk rising edge
+        state = FORWARD;
+        if (forwardISR) forwardISR(); // Call ISR if present
+    } else {
+        // clk falling edge
+        state = BACKWARD;
+        if (backwardISR) backwardISR();
+    }
 }
 
 #endif
