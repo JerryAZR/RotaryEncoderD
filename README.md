@@ -103,4 +103,5 @@ states the key observation:
 
 Based on this observation, I implemented an interrupt-based rotary encoder
 reader. IN contrast to the original implemenation, mine uses two interrupt pins
-and generates exactly one pulse each step.
+and generates exactly one pulse each step. In addition, no pulses are lost when
+starting the rotation or changing the direction.
