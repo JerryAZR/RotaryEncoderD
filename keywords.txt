@@ -1,0 +1,25 @@
+#######################################
+# RotaryEncoderDebounced
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+RotaryEncoderDebounced	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+read	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+NO_ACTION	LITERAL1
+FORWARD	LITERAL1
+BACKWARD	LITERAL1
+
