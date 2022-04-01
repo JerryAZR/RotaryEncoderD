@@ -1,5 +1,8 @@
 # RotaryEncoderD Library for Arduino
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![example workflow](https://github.com/JerryAZR/RotaryEncoderD/actions/workflows/arduino-lint-action.yml/badge.svg)
+
 ## Introduction
 
 A library for debouncing any [KY-040-like](https://www.handsontec.com/dataspecs/module/Rotary%20Encoder.pdf) rotary encoder.
