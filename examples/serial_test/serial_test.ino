@@ -9,12 +9,12 @@
  * 
  */
 
-#include <RotaryEncoderDebounced.h>
+#include <RotaryEncoderD.h>
 
 const uint8_t CLK_PIN = 0;
 const uint8_t DT_PIN  = 1;
 
-RotaryEncoderDebounced<CLK_PIN, DT_PIN> encoder;
+RotaryEncoderD<CLK_PIN, DT_PIN> encoder;
 
 void setup() {
   // Start the serial port

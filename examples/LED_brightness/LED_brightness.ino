@@ -9,7 +9,7 @@
  * 
  */
 
-#include <RotaryEncoderDebounced.h>
+#include <RotaryEncoderD.h>
 
 const uint8_t CLK_PIN = 0;
 const uint8_t DT_PIN  = 1;
@@ -19,7 +19,7 @@ const int pwm_period  = 1000; // 1000 microseconds
 const int pwm_step    = 20;
 int pwm_on_time       = 0;
 
-RotaryEncoderDebounced<CLK_PIN, DT_PIN> encoder;
+RotaryEncoderD<CLK_PIN, DT_PIN> encoder;
 
 void setup() {
   // Initialize the encoder

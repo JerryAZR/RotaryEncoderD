@@ -1,12 +1,12 @@
 #######################################
-# RotaryEncoderDebounced
+# RotaryEncoderD
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-RotaryEncoderDebounced	KEYWORD1
+RotaryEncoderD  KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
