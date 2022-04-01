@@ -1,8 +1,8 @@
 # RotaryEncoderD Library for Arduino
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![example workflow](https://github.com/JerryAZR/RotaryEncoderD/actions/workflows/arduino-lint-action.yml/badge.svg)
-![example workflow](https://github.com/JerryAZR/RotaryEncoderD/actions/workflows/compile-examples.yml/badge.svg)
+[![Arduino Lint Action Status](https://github.com/JerryAZR/RotaryEncoderD/actions/workflows/arduino-lint-action.yml/badge.svg)](https://github.com/JerryAZR/RotaryEncoderD/actions?workflow=Arduino+Lint)
+[![Compile Examples Action Status](https://github.com/JerryAZR/RotaryEncoderD/actions/workflows/compile-examples.yml/badge.svg)](https://github.com/JerryAZR/RotaryEncoderD/actions?workflow=Compile+Examples)
 
 ## Introduction
 
