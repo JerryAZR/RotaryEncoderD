@@ -24,6 +24,8 @@
 
 #include <RotaryEncoderD.h>
 
+// Both CLK_PIN and DT_PIN should support interrupts
+// Set them according to your circuit and board specification
 const uint8_t CLK_PIN = 0;
 const uint8_t DT_PIN  = 1;
 
