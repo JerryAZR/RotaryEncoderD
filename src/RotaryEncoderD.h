@@ -10,7 +10,7 @@
  * 
  * @todo Add support for user-defined interrupts
  * 
- * @version 1.0.0
+ * @version 1.0.2
  * @date 2022-03-31
  * 
  * @copyright Copyright (c) 2022 Zerui An
@@ -38,16 +38,15 @@ template<uint8_t clk_pin, uint8_t dt_pin>
 class RotaryEncoderD {
 private:
     /* data */
-    // clk pin to encoder map
-    static RotaryEncoderD<clk_pin, dt_pin>* map[11];
+    // Each instance gets its own class and static variable
     // pin numbers (declared as template)
     // uint8_t clk_pin;    // clock pin
     // uint8_t dt_pin;     // data pin
-    bool active_low;
+    static bool active_low;
     // pin values
-    volatile uint8_t clk_val;
-    volatile uint8_t dt_val;
-    volatile int state;
+    static volatile uint8_t clk_val;
+    static volatile uint8_t dt_val;
+    static volatile int     state;
 
     static void clk_trigger_isr(); // update dt value
     static void dt_trigger_isr(); // update clk value
@@ -64,7 +63,16 @@ public:
 };
 
 template<uint8_t clk_pin, uint8_t dt_pin>
-RotaryEncoderD<clk_pin, dt_pin>* RotaryEncoderD<clk_pin, dt_pin>::map[11] = {0};
+bool RotaryEncoderD<clk_pin, dt_pin>::active_low = true;
+
+template<uint8_t clk_pin, uint8_t dt_pin>
+volatile uint8_t RotaryEncoderD<clk_pin, dt_pin>::clk_val = 1;
+
+template<uint8_t clk_pin, uint8_t dt_pin>
+volatile uint8_t RotaryEncoderD<clk_pin, dt_pin>::dt_val = 1;
+
+template<uint8_t clk_pin, uint8_t dt_pin>
+volatile int RotaryEncoderD<clk_pin, dt_pin>::state = NO_ACTION;
 
 /**
  * @brief Construct a new RotaryEncoderD<clk_pin, dt_pin>::RotaryEncoderD object
@@ -74,14 +82,12 @@ RotaryEncoderD<clk_pin, dt_pin>* RotaryEncoderD<clk_pin, dt_pin>::map[11] = {0};
  * @param active_low - whether the encoder is active low. defaults to true
  */
 template<uint8_t clk_pin, uint8_t dt_pin>
-RotaryEncoderD<clk_pin, dt_pin>::RotaryEncoderD(bool active_low)
-: active_low(active_low), state(NO_ACTION), clk_val(1), dt_val(1) {
-    map[clk_pin] = this;
+RotaryEncoderD<clk_pin, dt_pin>::RotaryEncoderD(bool active_low) {
+    this->active_low = active_low;
 }
 
 template<uint8_t clk_pin, uint8_t dt_pin>
 RotaryEncoderD<clk_pin, dt_pin>::~RotaryEncoderD() {
-    map[clk_pin] = 0;
     detachInterrupt(digitalPinToInterrupt(clk_pin));
     detachInterrupt(digitalPinToInterrupt(dt_pin));
 }
@@ -127,9 +133,8 @@ int RotaryEncoderD<clk_pin, dt_pin>::read() {
  */
 template<uint8_t clk_pin, uint8_t dt_pin>
 void RotaryEncoderD<clk_pin, dt_pin>::clk_trigger_isr() {
-    RotaryEncoderD<clk_pin, dt_pin>* encoder = map[clk_pin];
     uint8_t tmp = digitalRead(dt_pin);
-    encoder->dt_val = encoder->active_low ? tmp : !tmp;
+    dt_val = active_low ? tmp : !tmp;
 }
 
 /**
@@ -141,16 +146,16 @@ void RotaryEncoderD<clk_pin, dt_pin>::clk_trigger_isr() {
  */
 template<uint8_t clk_pin, uint8_t dt_pin>
 void RotaryEncoderD<clk_pin, dt_pin>::dt_trigger_isr() {
-    RotaryEncoderD<clk_pin, dt_pin>* encoder = map[clk_pin];
-    uint8_t previous_clk = encoder->clk_val;
+    uint8_t previous_clk = clk_val;
     uint8_t tmp = digitalRead(clk_pin);
-    encoder->clk_val = encoder->active_low ? tmp : !tmp;
+    clk_val = active_low ? tmp : !tmp;
 
     // we want the data pin to be active (dt_val == 0)
-    if (encoder->dt_val) return;
+    if (dt_val) return;
     // only read at clock edge
-    if (previous_clk == encoder->clk_val) return;
-    encoder->state = encoder->clk_val ? FORWARD : BACKWARD;
+    if (previous_clk == clk_val) return;
+
+    state = clk_val ? FORWARD : BACKWARD;
 }
 
 #endif

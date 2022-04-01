@@ -2,7 +2,7 @@
  * @file LED_brightness.ino
  * @author Zerui An (anzerui@126.com / jerryazr@gmail.com)
  * @brief Use the rotary encoder to control the brightness of the builtin LED
- * @version 1.0.0
+ * @version 1.0.2
  * @date 2022-03-31
  * 
  * @copyright Copyright (c) 2022 Zerui An
