@@ -7,10 +7,8 @@
  * Unlike many other rotary encoder libraries which use delay-based debouncing,
  * this library uses an interrupt-based approach.
  * Note that this library does NOT debounce the sw pin.
- * 
- * @todo Add support for user-defined interrupts
- * 
- * @version 1.1.0
+ *  
+ * @version 1.1.1
  * @date 2022-03-31
  * 
  * @copyright Copyright (c) 2022 Zerui An

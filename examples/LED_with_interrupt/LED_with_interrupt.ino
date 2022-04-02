@@ -3,7 +3,7 @@
  * @author Zerui An (anzerui@126.com / jerryazr@gmail.com)
  * @brief Use the rotary encoder to control the brightness of the builtin LED,
  * but this time using custom interrupt service routines (ISRs).
- * @version 1.1.0
+ * @version 1.1.1
  * @date 2022-04-01
  * 
  * @copyright Copyright (c) 2022 Zerui An
